@@ -2,32 +2,32 @@
 
 namespace Overdesign\Test;
 
-use Overdesign\PasswordMutator\PasswordMuttator;
+use Overdesign\PasswordMutator\PasswordMutator;
 use PHPUnit\Framework\TestCase;
 
 /**
- * @covers \Overdesign\PasswordMutator\PasswordMuttator
+ * @covers \Overdesign\PasswordMutator\PasswordMutator
  */
-class PasswordMuttatorTest extends TestCase
+class PasswordMutatorTest extends TestCase
 {
     /**
-     * @covers \Overdesign\PasswordMutator\PasswordMuttator::toggleCaseFirst
+     * @covers \Overdesign\PasswordMutator\PasswordMutator::toggleLCaseFirst
      * @dataProvider passwordProvider
      */
-    public function testToggleCaseFirst($password, $firstLetterCaseToggle)
+    public function testToggleLCaseFirst($password, $firstLetterCaseToggle)
     {
-        $mutated = PasswordMuttator::toggleCaseFirst($password);
+        $mutated = PasswordMutator::toggleLCaseFirst($password);
 
         $this->assertEquals($firstLetterCaseToggle, $mutated);
     }
 
     /**
-     * @covers \Overdesign\PasswordMutator\PasswordMuttator::toggleCaseAll
+     * @covers \Overdesign\PasswordMutator\PasswordMutator::toggleCaseAll
      * @dataProvider passwordProvider
      */
     public function testToggleCaseAll($password, $firstLetterCaseToggle, $fullCaseToggle)
     {
-        $mutated = PasswordMuttator::toggleCaseAll($password);
+        $mutated = PasswordMutator::toggleCaseAll($password);
 
         $this->assertEquals($fullCaseToggle, $mutated);
     }
@@ -35,8 +35,9 @@ class PasswordMuttatorTest extends TestCase
     public function passwordProvider()
     {
         // Password, FirstLetterCaseToggle, FullCaseToggle
+        yield ['', '', ''];
         yield ['Am24!4%éKx', 'am24!4%éKx', 'aM24!4%ÉkX'];
         yield ['123abcefs$', '123abcefs$', '123ABCEFS$'];
-        yield ['éúËBfm&', 'ÉúËBfm&', 'ÉÚëbFM&'];
+        yield ['éúËBfm&', 'éúËBfm&', 'ÉÚëbFM&'];
     }
 }

@@ -2,25 +2,36 @@
 
 namespace Overdesign\PasswordMutator;
 
-class PasswordMuttator
+class PasswordMutator
 {
     private const LOWERCASE = 'àèìòùáéíóúýâêîôûãñõäëïöüÿçabcdefghijklmnñopqrstuvwxyz';
     private const UPPERCASE = 'ÀÈÌÒÙÁÉÍÓÚÝÂÊÎÔÛÃÑÕÄËÏÖÜŸÇABCDEFGHIJKLMNÑOPQRSTUVWXYZ';
 
     /**
+     * Returns given password with first letter in lowercase, this resemble mobile phone input behaviour
+     *
      * @param string $password
      *
      * @return string
      */
-    public static function toggleCaseFirst(string $password): string
+    public static function toggleLCaseFirst(string $password): string
     {
-        // TODO Check length
+        if ($password === '') {
+            return $password;
+        }
+
         $firstLetter = mb_substr($password, 0, 1);
 
-        return self::toggleLetter($firstLetter) . mb_substr($password, 1);
+        if (strpos(self::UPPERCASE, $firstLetter) !== false) {
+            return mb_strtolower($firstLetter) . mb_substr($password, 1);
+        }
+
+        return $password;
     }
 
     /**
+     * Returns given password with case toggle applied to all letters, like if the password
+     *
      * @param string $password
      *
      * @return string
@@ -29,7 +40,7 @@ class PasswordMuttator
     {
         return implode('', array_map(static function ($letter) {
             return self::toggleLetter($letter);
-        }, str_split($password)));
+        }, preg_split('//u', $password, -1, PREG_SPLIT_NO_EMPTY)));
     }
 
     /**
@@ -40,11 +51,11 @@ class PasswordMuttator
     private static function toggleLetter($letter): string
     {
         if (strpos(self::LOWERCASE, $letter) !== false) {
-            return strtr($letter, self::LOWERCASE, self::UPPERCASE);
+            return mb_strtoupper($letter);
         }
 
         if (strpos(self::UPPERCASE, $letter) !== false) {
-            return strtr($letter, self::UPPERCASE, self::LOWERCASE);
+            return mb_strtolower($letter);
         }
 
         return $letter;
