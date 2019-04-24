@@ -32,6 +32,17 @@ class PasswordMutatorTest extends TestCase
         $this->assertEquals($fullCaseToggle, $mutated);
     }
 
+    /**
+     * @covers \Overdesign\PasswordMutator\PasswordMutator::getMutations
+     * @dataProvider mutationProvider
+     */
+    public function testGetMutations($password, $mutationArray)
+    {
+        $mutations = PasswordMutator::getMutations($password); // TODO Test $option toggles
+
+        $this::assertEquals($mutationArray, $mutations);
+    }
+
     public function passwordProvider()
     {
         // Password, FirstLetterCaseToggle, FullCaseToggle
@@ -39,5 +50,14 @@ class PasswordMutatorTest extends TestCase
         yield ['Am24!4%éKx', 'am24!4%éKx', 'aM24!4%ÉkX'];
         yield ['123abcefs$', '123abcefs$', '123ABCEFS$'];
         yield ['éúËBfm&', 'éúËBfm&', 'ÉÚëbFM&'];
+    }
+
+    public function mutationProvider()
+    {
+        // Password, MutationArray
+        yield ['', []];
+        yield ['Am24!4%éKx', ['am24!4%éKx', 'aM24!4%ÉkX']];
+        yield ['123abcefs$', ['123ABCEFS$']];
+        yield ['éúËBfm&', ['ÉÚëbFM&']];
     }
 }

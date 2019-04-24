@@ -8,6 +8,47 @@ class PasswordMutator
     private const UPPERCASE = 'ÀÈÌÒÙÁÉÍÓÚÝÂÊÎÔÛÃÑÕÄËÏÖÜŸÇABCDEFGHIJKLMNÑOPQRSTUVWXYZ';
 
     /**
+     * @param string $password
+     * @param int $options
+     *
+     * @return string[]
+     */
+    public static function getMutations(string $password, int $options = Toggle::DEFAULT): array
+    {
+        $mutations = [];
+
+        if ($options === Toggle::NONE) {
+            return $mutations;
+        }
+
+        if ($options === Toggle::CASE_FIRST) {
+            return self::filterUniquePasswords([self::toggleLCaseFirst($password)], $password);
+        }
+
+        if ($options === Toggle::CASE_ALL) {
+            return self::filterUniquePasswords([self::toggleCaseAll($password)], $password);
+        }
+
+        return self::filterUniquePasswords([
+            self::toggleLCaseFirst($password),
+            self::toggleCaseAll($password)
+        ], $password);
+    }
+
+    /**
+     * @param string[] $mutations
+     * @param string $original
+     *
+     * @return string[]
+     */
+    private static function filterUniquePasswords(array $mutations, string $original): array
+    {
+        return array_values(array_unique(array_filter($mutations, function (string $mutation) use ($original) {
+            return $mutation !== $original;
+        })));
+    }
+
+    /**
      * Returns given password with first letter in lowercase, this resemble mobile phone input behaviour
      *
      * @param string $password
